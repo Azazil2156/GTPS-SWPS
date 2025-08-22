@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWPS - GTPS Server</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap');
+        
+        :root {
+            --neon-cyan: #0ff;
+            --neon-pink: #f0f;
+            --neon-green: #0f0;
+            --bg-dark: #0a0a12;
+            --bg-darker: #050508;
+            --text-color: #e0e0e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+            font-family: 'Share Tech Mono', monospace;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(15, 255, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(240, 0, 255, 0.05) 0%, transparent 20%),
+                linear-gradient(to bottom, var(--bg-darker), var(--bg-dark));
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--neon-cyan);
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            animation: flicker 5s infinite alternate;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+        
+        .server-status {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--neon-green);
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .status-indicator {
+            width: 15px;
+            height: 15px;
+            background-color: var(--neon-green);
+            border-radius: 50%;
+            margin-right: 10px;
+            box-shadow: 0 0 10px var(--neon-green);
+            animation: pulse 2s infinite;
+        }
+        
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--neon-pink);
+            padding: 12px 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(240, 0, 255, 0.4), transparent);
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            background-color: rgba(240, 0, 255, 0.1);
+            box-shadow: 0 0 15px var(--neon-pink);
+        }
+        
+        .btn span {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .windows-config {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            font-family: 'Share Tech Mono', monospace;
+            white-space: pre-wrap;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+        
+        .tutorial-section {
+            margin-top: 2rem;
+        }
+        
+        .tutorial-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .tutorial-btn {
+            background-color: transparent;
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+            padding: 8px 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .tutorial-btn:hover, .tutorial-btn.active {
+            background-color: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+        
+        .tutorial-content {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+        
+        .tutorial-content.active {
+            display: block;
+        }
+        
+        .tutorial-content h3 {
+            color: var(--neon-pink);
+            margin-bottom: 1rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .tutorial-content ol {
+            padding-left: 1.5rem;
+        }
+        
+        .tutorial-content li {
+            margin-bottom: 0.8rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1rem;
+            border-top: 1px solid var(--neon-cyan);
+            font-size: 0.9rem;
+            color: rgba(224, 224, 224, 0.7);
+        }
+        
+        /* Animations */
+        @keyframes flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+                opacity: 1;
+                text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+                opacity: 0.8;
+                text-shadow: none;
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 255, 0, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .tutorial-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SWPS</h1>
+            <div class="description">
+                SWPS adalah server GTPS (GrowTopia Private Server) yang menawarkan pengalaman bermain GrowTopia yang unik dengan fitur-fitur eksklusif dan komunitas yang aktif. Nikmati gameplay yang lebih baik dengan berbagai penambahan item dan event spesial!
+            </div>
+        </header>
+        
+        <div class="server-status">
+            <div class="status-indicator"></div>
+            <div class="status-text">Server Status: ONLINE</div>
+        </div>
+        
+        <div class="button-container">
+            <a href="https://www.mediafire.com/file/ntm350bmfbq9fi8/SWPS.txt/file" class="btn" target="_blank">
+                <span>📥</span> Unduh VHOST
+            </a>
+            
+            <button class="btn" onclick="copyToClipboard('https://growsoft.cc/android.txt', 'ptunnel')">
+                <span>📋</span> Copy Ptunnel
+            </button>
+            
+            <button class="btn" onclick="copyToClipboard('https://growsoft.cc/ios.txt', 'ios')">
+                <span>📱</span> Copy iOS
+            </button>
+        </div>
+        
+        <div class="windows-config">
+91.134.85.13 growtopia1.com
+91.134.85.13 growtopia2.com
+91.134.85.13 www.growtopia1.com
+91.134.85.13 www.growtopia2.com
+        </div>
+        
+        <div class="tutorial-section">
+            <h2 style="text-align: center; color: var(--neon-cyan); margin-bottom: 1.5rem;">Tutorial</h2>
+            
+            <div class="tutorial-buttons">
+                <button class="tutorial-btn active" onclick="showTutorial('android')">Android</button>
+                <button class="tutorial-btn" onclick="showTutorial('ios')">iOS</button>
+                <button class="tutorial-btn" onclick="showTutorial('windows')">Windows</button>
+            </div>
+            
+            <div id="android-tutorial" class="tutorial-content active">
+                <h3>Tutorial Android</h3>
+                <ol>
+                    <li>First, download Powertunnel APP from link here: <a href="https://github.com/krlvm/PowerTunnel-Android/releases/download/v2.6.3/PowerTunnel.apk" style="color: var(--neon-cyan);">https://github.com/krlvm/PowerTunnel-Android/releases/download/v2.6.3/PowerTunnel.apk</a></li>
+                    <li>And then click on the "Powertunnel" button.</li>
+                    <li>It will copy the powertunnel host link.</li>
+                    <li>Then open the powertunnel app, click the three-line icon, and click on the host settings icon.</li>
+                    <li>Paste the copied powertunnel host URL. Also, change the host update period from 12 hours to on start.</li>
+                    <li>Now you can log in to your GTPS</li>
+                </ol>
+            </div>
+            
+            <div id="ios-tutorial" class="tutorial-content">
+                <h3>Tutorial iOS</h3>
+                <ol>
+                    <li>Download App called: "Surge 5" from App Store. Surge 5 IOS</li>
+                    <li>Press "OK",</li>
+                    <li>Click on "Default.conf".</li>
+                    <li>Click on "IMPORT" part - Download Profile from URL.</li>
+                    <li>Put url from your copy when click IOS host button above and click "OK" and "Done"</li>
+                    <li>Press "SETUP" and then agree to policy by clicking "OK" and "Allow" for VPN Configuration!.</li>
+                    <li>Done, then open "Growtopia" and Connect!</li>
+                </ol>
+            </div>
+            
+            <div id="windows-tutorial" class="tutorial-content">
+                <h3>Tutorial Windows</h3>
+                <ol>
+                    <li>Press ⊞ Win+R (Windows Key + R) to open up the "Run" window.</li>
+                    <li>Type in C:\Windows\System32\drivers\etc in the textbox.</li>
+                    <li>Find file named hosts.</li>
+                    <li>Right-click on "hosts" file and edit it with Notepad/text editor.</li>
+                    <li>Add ip above.</li>
+                    <li>Then Save and logon to your growtopia</li>
+                </ol>
+            </div>
+        </div>
+        
+        <footer>
+            SWPS GTPS Server &copy; 2023 | Cyberpunk Theme
+        </footer>
+    </div>
+
+    <script>
+        function copyToClipboard(text, type) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert(type === 'ptunnel' ? 'Ptunnel berhasil disalin!' : 
+                      type === 'ios' ? 'Link iOS berhasil disalin!' : 'Teks berhasil disalin!');
+            }).catch(function(err) {
+                console.error('Gagal menyalin teks: ', err);
+            });
+        }
+        
+        function showTutorial(platform) {
+            // Hide all tutorial contents
+            document.querySelectorAll('.tutorial-content').forEach(function(content) {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tutorial-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tutorial content
+            document.getElementById(platform + '-tutorial').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+  </html>
