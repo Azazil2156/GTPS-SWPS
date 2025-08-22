@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SWPS - GTPS Server</title>
+    <title>SWPS - GTPS Server Cyberpunk</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
         
         :root {
             --neon-cyan: #0ff;
             --neon-pink: #f0f;
             --neon-green: #0f0;
+            --neon-yellow: #ff0;
             --bg-dark: #0a0a12;
             --bg-darker: #050508;
+            --bg-medium: #0c0c1a;
             --text-color: #e0e0e0;
+            --glow-cyan: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+            --glow-pink: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
+            --glow-green: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
         }
         
         * {
@@ -25,85 +31,84 @@
         body {
             background-color: var(--bg-dark);
             color: var(--text-color);
-            font-family: 'Share Tech Mono', monospace;
+            font-family: 'Rajdhani', sans-serif;
             line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(15, 255, 255, 0.05) 0%, transparent 20%),
                 radial-gradient(circle at 90% 80%, rgba(240, 0, 255, 0.05) 0%, transparent 20%),
                 linear-gradient(to bottom, var(--bg-darker), var(--bg-dark));
-            min-height: 100vh;
-            overflow-x: hidden;
+            padding: 20px;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 20px;
         }
         
         header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             position: relative;
-            padding: 1.5rem 0;
+            padding: 2rem 0;
             border-bottom: 1px solid var(--neon-cyan);
         }
         
         h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
+            font-size: 4rem;
+            font-weight: 900;
             color: var(--neon-cyan);
-            text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
-            letter-spacing: 3px;
+            text-shadow: var(--glow-cyan);
+            letter-spacing: 4px;
             margin-bottom: 1rem;
             animation: flicker 5s infinite alternate;
-        }
-        
-        .description {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            padding: 0 1rem;
         }
         
         .server-status {
             background-color: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--neon-green);
-            border-radius: 5px;
-            padding: 1rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 600;
         }
         
         .status-indicator {
-            width: 15px;
-            height: 15px;
+            width: 18px;
+            height: 18px;
             background-color: var(--neon-green);
             border-radius: 50%;
-            margin-right: 10px;
-            box-shadow: 0 0 10px var(--neon-green);
+            margin-right: 15px;
+            box-shadow: var(--glow-green);
             animation: pulse 2s infinite;
         }
         
         .button-container {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: 1.2rem;
+            margin-bottom: 2.5rem;
         }
         
         .btn {
             background-color: transparent;
             color: var(--text-color);
             border: 2px solid var(--neon-pink);
-            padding: 12px 20px;
+            padding: 15px 25px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
             text-decoration: none;
             text-align: center;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
@@ -132,87 +137,125 @@
         
         .btn:hover {
             background-color: rgba(240, 0, 255, 0.1);
-            box-shadow: 0 0 15px var(--neon-pink);
+            box-shadow: 0 0 20px var(--neon-pink);
+            transform: translateY(-2px);
         }
         
         .btn span {
-            margin-right: 10px;
-            font-size: 1.3rem;
+            margin-right: 12px;
+            font-size: 1.5rem;
+        }
+        
+        .windows-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--neon-yellow);
+            text-align: center;
+            margin-bottom: 1.2rem;
+            text-shadow: 0 0 10px var(--neon-yellow);
         }
         
         .windows-config {
             background-color: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--neon-cyan);
-            border-radius: 5px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            border-radius: 8px;
+            padding: 1.8rem;
+            margin-bottom: 2.5rem;
             font-family: 'Share Tech Mono', monospace;
             white-space: pre-wrap;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            line-height: 1.8;
+            font-size: 1.1rem;
+            text-align: center;
         }
         
         .tutorial-section {
-            margin-top: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .tutorial-title {
+            text-align: center;
+            color: var(--neon-yellow);
+            margin-bottom: 2rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px var(--neon-yellow);
         }
         
         .tutorial-buttons {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
             flex-wrap: wrap;
+            justify-content: center;
         }
         
         .tutorial-btn {
             background-color: transparent;
             color: var(--neon-green);
             border: 1px solid var(--neon-green);
-            padding: 8px 15px;
+            padding: 12px 24px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 6px;
             transition: all 0.3s ease;
         }
         
         .tutorial-btn:hover, .tutorial-btn.active {
             background-color: rgba(0, 255, 0, 0.1);
-            box-shadow: 0 0 10px var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+            transform: translateY(-2px);
         }
         
         .tutorial-content {
             display: none;
             background-color: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--neon-cyan);
-            border-radius: 5px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
         }
         
         .tutorial-content.active {
             display: block;
+            animation: fadeIn 0.5s ease;
         }
         
         .tutorial-content h3 {
             color: var(--neon-pink);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            text-shadow: 0 0 8px var(--neon-pink);
         }
         
         .tutorial-content ol {
-            padding-left: 1.5rem;
+            padding-left: 1.8rem;
         }
         
         .tutorial-content li {
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .tutorial-content a {
+            color: var(--neon-cyan);
+            text-decoration: none;
+        }
+        
+        .tutorial-content a:hover {
+            text-decoration: underline;
+            text-shadow: var(--glow-cyan);
         }
         
         footer {
             text-align: center;
-            margin-top: 3rem;
-            padding: 1rem;
+            margin-top: 4rem;
+            padding: 2rem 1rem;
             border-top: 1px solid var(--neon-cyan);
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: rgba(224, 224, 224, 0.7);
         }
         
@@ -220,7 +263,7 @@
         @keyframes flicker {
             0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
                 opacity: 1;
-                text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+                text-shadow: var(--glow-cyan);
             }
             20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
                 opacity: 0.8;
@@ -233,36 +276,84 @@
                 box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
             }
             70% {
-                box-shadow: 0 0 0 10px rgba(0, 255, 0, 0);
+                box-shadow: 0 0 0 12px rgba(0, 255, 0, 0);
             }
             100% {
                 box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
             }
         }
         
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Matrix rain effect background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             h1 {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
             }
             
             .container {
-                padding: 1rem;
+                padding: 15px;
             }
             
             .tutorial-buttons {
                 flex-direction: column;
             }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 1.1rem;
+            }
+            
+            .windows-config {
+                padding: 1.2rem;
+                font-size: 1rem;
+                overflow-x: auto;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .server-status {
+                font-size: 1.1rem;
+                padding: 1rem;
+            }
+            
+            .btn {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .btn span {
+                margin-right: 0;
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="matrix-bg" id="matrixBg"></div>
+    
     <div class="container">
         <header>
             <h1>SWPS</h1>
-            <div class="description">
-                SWPS adalah server GTPS (GrowTopia Private Server) yang menawarkan pengalaman bermain GrowTopia yang unik dengan fitur-fitur eksklusif dan komunitas yang aktif. Nikmati gameplay yang lebih baik dengan berbagai penambahan item dan event spesial!
-            </div>
         </header>
         
         <div class="server-status">
@@ -275,15 +366,16 @@
                 <span>📥</span> Unduh VHOST
             </a>
             
-            <button class="btn" onclick="copyToClipboard('https://growsoft.cc/android.txt', 'ptunnel')">
+            <button class="btn" onclick="copyToClipboard('https://growsoft.cc/android.txt', 'Ptunnel')">
                 <span>📋</span> Copy Ptunnel
             </button>
             
-            <button class="btn" onclick="copyToClipboard('https://growsoft.cc/ios.txt', 'ios')">
+            <button class="btn" onclick="copyToClipboard('https://growsoft.cc/ios.txt', 'iOS')">
                 <span>📱</span> Copy iOS
             </button>
         </div>
         
+        <h2 class="windows-title">💻 Use Windows</h2>
         <div class="windows-config">
 91.134.85.13 growtopia1.com
 91.134.85.13 growtopia2.com
@@ -292,7 +384,7 @@
         </div>
         
         <div class="tutorial-section">
-            <h2 style="text-align: center; color: var(--neon-cyan); margin-bottom: 1.5rem;">Tutorial</h2>
+            <h2 class="tutorial-title">Tutorial</h2>
             
             <div class="tutorial-buttons">
                 <button class="tutorial-btn active" onclick="showTutorial('android')">Android</button>
@@ -303,7 +395,7 @@
             <div id="android-tutorial" class="tutorial-content active">
                 <h3>Tutorial Android</h3>
                 <ol>
-                    <li>First, download Powertunnel APP from link here: <a href="https://github.com/krlvm/PowerTunnel-Android/releases/download/v2.6.3/PowerTunnel.apk" style="color: var(--neon-cyan);">https://github.com/krlvm/PowerTunnel-Android/releases/download/v2.6.3/PowerTunnel.apk</a></li>
+                    <li>First, download Powertunnel APP from link <a href="https://github.com/krlvm/PowerTunnel-Android/releases/download/v2.6.3/PowerTunnel.apk" target="_blank">here</a>.</li>
                     <li>And then click on the "Powertunnel" button.</li>
                     <li>It will copy the powertunnel host link.</li>
                     <li>Then open the powertunnel app, click the three-line icon, and click on the host settings icon.</li>
@@ -339,20 +431,22 @@
         </div>
         
         <footer>
-            SWPS GTPS Server &copy; 2023 | Cyberpunk Theme
+            SWPS GTPS | Create by:@Azazil ; 2025 | Join My server
         </footer>
     </div>
 
     <script>
+        // Fungsi untuk menyalin teks ke clipboard
         function copyToClipboard(text, type) {
             navigator.clipboard.writeText(text).then(function() {
-                alert(type === 'ptunnel' ? 'Ptunnel berhasil disalin!' : 
-                      type === 'ios' ? 'Link iOS berhasil disalin!' : 'Teks berhasil disalin!');
+                alert(type + ' berhasil disalin ke clipboard!');
             }).catch(function(err) {
                 console.error('Gagal menyalin teks: ', err);
+                alert('Gagal menyalin teks. Silakan coba manual: ' + text);
             });
         }
         
+        // Fungsi untuk menampilkan tutorial
         function showTutorial(platform) {
             // Hide all tutorial contents
             document.querySelectorAll('.tutorial-content').forEach(function(content) {
@@ -370,6 +464,53 @@
             // Add active class to clicked button
             event.target.classList.add('active');
         }
+        
+        // Matrix rain effect
+        function createMatrixEffect() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const container = document.getElementById('matrixBg');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            container.appendChild(canvas);
+            
+            const matrix = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}";
+            const font_size = 12;
+            const columns = canvas.width / font_size;
+            const drops = [];
+            
+            for(let x = 0; x < columns; x++)
+                drops[x] = 1; 
+            
+            function draw() {
+                ctx.fillStyle = "rgba(0, 0, 0, 0.04)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = "#0F0";
+                ctx.font = font_size + "px arial";
+                
+                for(let i = 0; i < drops.length; i++) {
+                    const text = matrix[Math.floor(Math.random() * matrix.length)];
+                    ctx.fillText(text, i * font_size, drops[i] * font_size);
+                    
+                    if(drops[i] * font_size > canvas.height && Math.random() > 0.975)
+                        drops[i] = 0;
+                    
+                    drops[i]++;
+                }
+            }
+            
+            setInterval(draw, 35);
+            
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+        
+        // Initialize matrix effect
+        createMatrixEffect();
     </script>
 </body>
-  </html>
+</html>
